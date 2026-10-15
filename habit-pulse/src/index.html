@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Habit Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="lucide.min.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-zinc-950 pb-24">
+
+    <!-- Top Sticky App Bar -->
+    <header class="sticky top-0 z-30 backdrop-blur-xl bg-zinc-950/85 border-b border-zinc-800/80 px-4 py-3.5">
+        <div class="max-w-xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <i data-lucide="flame" class="w-5 h-5 text-zinc-950 fill-zinc-950"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base font-extrabold tracking-tight text-white">HABIT PULSE</h1>
+                        <span id="weekBadge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700/60">
+                            This Week
+                        </span>
+                    </div>
+                    <p id="currentDateDisplay" class="text-xs text-zinc-400 font-medium">Loading date...</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="openResetModal()" title="Reset Defaults" class="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border border-zinc-800 transition active:scale-95">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                </button>
+                <button onclick="openAddModal()" class="flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs px-3.5 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition active:scale-95">
+                    <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
+                    <span>New Goal</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-xl w-full mx-auto px-4 pt-4 space-y-5 flex-1">
+
+        <section class="grid grid-cols-3 gap-2.5">
+            <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3.5 flex flex-col justify-between relative overflow-hidden">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Today</span>
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div class="mt-2">
+                    <div class="flex items-baseline gap-1">
+                        <span id="todayScoreText" class="text-2xl font-extrabold text-white">0/0</span>
+                    </div>
+                    <div class="w-full bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div id="todayProgressBar" class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3.5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Weekly</span>
+                    <i data-lucide="bar-chart-3" class="w-4 h-4 text-sky-400"></i>
+                </div>
+                <div class="mt-2">
+                    <span id="weeklyPercentText" class="text-2xl font-extrabold text-white">0%</span>
+                    <p id="weeklySubText" class="text-[11px] text-zinc-400 mt-1 truncate">0 of 0 check-ins</p>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-3.5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Top Streak</span>
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                </div>
+                <div class="mt-2">
+                    <div class="flex items-baseline gap-1">
+                        <span id="bestStreakText" class="text-2xl font-extrabold text-amber-400">0</span>
+                        <span class="text-xs font-semibold text-zinc-400">days</span>
+                    </div>
+                    <p id="perfectDaysText" class="text-[11px] text-zinc-400 mt-1 truncate">0 perfect days</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-4 shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                        <span>Weekly Momentum Chart</span>
+                    </h2>
+                    <p class="text-xs text-zinc-400">Tap any day column to focus or inspect</p>
+                </div>
+                <div class="flex items-center gap-2 text-[11px] font-semibold">
+                    <span class="flex items-center gap-1 text-emerald-400">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> 100%
+                    </span>
+                    <span class="flex items-center gap-1 text-sky-400">
+                        <span class="w-2 h-2 rounded-full bg-sky-400 inline-block"></span> Active
+                    </span>
+                </div>
+            </div>
+
+            <div id="weeklyChartContainer" class="grid grid-cols-7 gap-2 pt-2 pb-1 items-end h-36"></div>
+        </section>
+
+        <section class="flex items-center justify-between pt-1">
+            <div class="flex items-center gap-2">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-zinc-300">Daily Habits</h2>
+                <span id="habitCountBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300">5</span>
+            </div>
+            <button onclick="markAllToday()" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 py-1 px-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 transition active:scale-95">
+                <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+                <span>Complete Today</span>
+            </button>
+        </section>
+
+        <section id="habitsListContainer" class="space-y-3"></section>
+
+        <div id="emptyState" class="hidden bg-zinc-900/50 border border-dashed border-zinc-800 rounded-2xl p-8 text-center my-6">
+            <div class="w-12 h-12 rounded-2xl bg-zinc-800/80 flex items-center justify-center mx-auto mb-3 text-zinc-400">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">No habits tracked yet</h3>
+            <p class="text-xs text-zinc-400 max-w-xs mx-auto mt-1 mb-4">Add your first daily habit or restore the default high-performance routine.</p>
+            <div class="flex justify-center gap-2">
+                <button onclick="openAddModal()" class="bg-emerald-500 text-zinc-950 font-bold text-xs px-4 py-2.5 rounded-xl">
+                    + Add Custom Habit
+                </button>
+                <button onclick="restoreDefaults()" class="bg-zinc-800 text-zinc-200 font-semibold text-xs px-4 py-2.5 rounded-xl">
+                    Restore Defaults
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Floating Bottom Quick-Add Bar -->
+    <div class="fixed bottom-0 inset-x-0 z-20 pointer-events-none">
+        <div class="max-w-xl mx-auto px-4 pb-4 pt-2 bg-gradient-to-t from-zinc-950 via-zinc-950/90 to-transparent pointer-events-auto">
+            <form id="quickAddForm" onsubmit="handleQuickAdd(event)" class="flex items-center gap-2 bg-zinc-900/95 border border-zinc-700/80 rounded-2xl p-1.5 shadow-2xl">
+                <button type="button" onclick="cycleQuickColor()" id="quickColorBtn" class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 transition active:scale-90" title="Tap to switch color">
+                    <span id="quickEmojiDisplay" class="text-base">⚡</span>
+                </button>
+                <input
+                    type="text"
+                    id="quickHabitInput"
+                    placeholder="Quick-add a habit (e.g. Read 20 Pages)..."
+                    maxlength="42"
+                    class="w-full bg-transparent text-sm text-white placeholder-zinc-500 focus:outline-none px-1"
+                />
+                <button type="submit" class="bg-zinc-100 hover:bg-white text-zinc-950 font-bold text-xs px-3.5 py-2.5 rounded-xl shrink-0 transition active:scale-95">
+                    Add
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Custom Habit Modal -->
+    <div id="addModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm p-0 sm:p-4">
+        <div class="bg-zinc-900 border-t sm:border border-zinc-800 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-zinc-800">
+                <h3 class="text-base font-bold text-white">Create Daily Habit</h3>
+                <button onclick="closeAddModal()" class="p-1.5 rounded-xl bg-zinc-800 text-zinc-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleModalAdd(event)" class="space-y-4 mt-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Habit Title</label>
+                    <input
+                        type="text"
+                        id="modalHabitName"
+                        required
+                        maxlength="45"
+                        placeholder="e.g., Cold Plunge, Mobility Flow"
+                        class="w-full bg-zinc-950 border border-zinc-800 focus:border-emerald-500 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none"
+                    />
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Category / Tag</label>
+                        <select id="modalHabitCategory" class="w-full bg-zinc-950 border border-zinc-800 focus:border-emerald-500 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none">
+                            <option value="Fitness">💪 Fitness</option>
+                            <option value="Nutrition">🥗 Nutrition</option>
+                            <option value="Learning">💻 Learning</option>
+                            <option value="Wellness">✨ Wellness</option>
+                            <option value="Health">💧 Health</option>
+                            <option value="Mindset">🧠 Mindset</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Daily Target</label>
+                        <input
+                            type="text"
+                            id="modalHabitMeta"
+                            maxlength="24"
+                            placeholder="e.g., 45 mins, 3L"
+                            class="w-full bg-zinc-950 border border-zinc-800 focus:border-emerald-500 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Accent Theme</label>
+                    <div id="colorPickerGrid" class="grid grid-cols-5 gap-2"></div>
+                </div>
+
+                <div class="pt-2 flex gap-2.5">
+                    <button type="button" onclick="closeAddModal()" class="w-1/3 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 font-semibold text-xs">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-2/3 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/20">
+                        Save Habit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-3xl p-5 shadow-2xl">
+            <div class="w-10 h-10 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center mb-3">
+                <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+            </div>
+            <h3 id="confirmModalTitle" class="text-base font-bold text-white">Reset Habit Data?</h3>
+            <p id="confirmModalDesc" class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                This will restore the 5 default habits and reset your current week's check-ins.
+            </p>
+            <div class="flex gap-2.5 mt-5">
+                <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 font-semibold text-xs">
+                    Cancel
+                </button>
+                <button id="confirmModalActionBtn" class="flex-1 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-zinc-950 font-bold text-xs">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2">
+        <div class="bg-zinc-800/95 backdrop-blur border border-zinc-700 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
+            <span id="toastDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span id="toastMessage">Saved</span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

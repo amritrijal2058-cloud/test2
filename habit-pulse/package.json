@@ -1,0 +1,18 @@
+{
+  "name": "habit-pulse",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i src/input.css -o www/styles.css --minify",
+    "build": "node scripts/build.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  },
+  "devDependencies": {
+    "lucide": "^0.469.0",
+    "tailwindcss": "^3.4.17"
+  }
+}
